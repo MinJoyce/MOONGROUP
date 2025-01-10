@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Định Vị Vị Trí và Mở Google Maps</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+    h1 {
+      text-align: center;
+    }
+    button {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    #status, #latitude, #longitude {
+      text-align: center;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Định Vị Vị Trí của Bạn và Mở Google Maps</h1>
+  
+  <!-- Nút để lấy vị trí -->
+  <button onclick="getLocation()">Lấy Vị Trí và Mở Google Maps</button>
+  
+  <!-- Hiển thị vị trí -->
+  <p id="status">Đang chờ...</p>
+  <p id="latitude"></p>
+  <p id="longitude"></p>
+
+  <script>
+    // Kiểm tra xem trình duyệt có hỗ trợ Geolocation hay không
+    if (navigator.geolocation) {
+      console.log("Geolocation is supported by this browser.");
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+
+    // Hàm để lấy vị trí của người dùng
+    function getLocation() {
+      // Yêu cầu quyền truy cập vị trí
+      navigator.geolocation.getCurrentPosition(showPosition, showError);
+    }
+
+    // Hàm này hiển thị thông tin vị trí sau khi lấy được
+    function showPosition(position) {
+      var latitude = position.coords.latitude; // Vĩ độ
+      var longitude = position.coords.longitude; // Kinh độ
+
+      // Hiển thị vĩ độ và kinh độ trên trang web
+      document.getElementById("latitude").innerHTML = "Vĩ độ: " + latitude;
+      document.getElementById("longitude").innerHTML = "Kinh độ: " + longitude;
+
+      // Tạo liên kết Google Maps với vị trí đã xác định
+      var mapLink = "https://www.google.com/maps?q=" + latitude + "," + longitude;
+      
+      // Cập nhật trạng thái và mở Google Maps
+      document.getElementById("status").innerHTML = "Vị trí của bạn đã được xác định.";
+      window.open(mapLink, "_blank");  // Mở Google Maps trong một cửa sổ mới
+    }
+
+    // Hàm hiển thị lỗi nếu không lấy được vị trí
+    function showError(error) {
+      switch(error.code) {
+        case error.PERMISSION_DENIED:
+          document.getElementById("status").innerHTML = "Người dùng từ chối việc chia sẻ vị trí.";
+          break;
+        case error.POSITION_UNAVAILABLE:
+          document.getElementById("status").innerHTML = "Không thể xác định vị trí.";
+          break;
+        case error.TIMEOUT:
+          document.getElementById("status").innerHTML = "Đã hết thời gian chờ để lấy vị trí.";
+          break;
+        case error.UNKNOWN_ERROR:
+          document.getElementById("status").innerHTML = "Lỗi không xác định.";
+          break;
+      }
+    }
+  </script>
+</body>
+</html>
